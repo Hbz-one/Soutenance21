@@ -2,23 +2,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-blue-whale
+  name: soutenance21
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hello-whale-app
+      app: soutenance21-app
       version: blue
   template:
     metadata:
-      name: hello-blue-whale-pod
+      name: soutenance21-pod
       labels:
-        app: hello-whale-app
+        app: soutenance21-app
         version: blue
     spec:
       containers:
-      - name: hello-whale-container
-        image: hbzone/hellowhale:latest
+      - name: soutenance21-container
+        image: hbzone/soutenance21_hbz:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
@@ -26,12 +26,12 @@ spec:
 apiVersion: v1
 kind: Service 
 metadata:
-  name: hello-whale-svc
+  name: soutenance21-svc
   labels:
-    app: hello-whale-app
+    app: soutenance21-app
 spec:
   selector:
-    app: hello-whale-app
+    app: soutenance21-app
     version: blue
   type: NodePort
   ports:
