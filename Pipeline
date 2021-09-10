@@ -1,0 +1,49 @@
+pipeline {
+
+  agent any
+
+  stages {
+
+    stage('Checkout Source') {
+      steps {
+        git url:'https://github.com/Hbz-one/Soutenance21.git', branch:'master'
+      }
+    }
+    
+      stage("Build image") {
+            steps {
+                script {
+                    myapp = docker.build("hbzone/soutenance21:${env.BUILD_ID}")
+                }
+            }
+        }
+    
+      stage("Push image") {
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+                            myapp.push("latest")
+                            myapp.push("${env.BUILD_ID}")
+                    }
+                }
+            }
+        }
+
+    
+    stage('Deploy App') {
+      steps {
+          sshagent(['K8S_Master']) {
+          sh "scp -o StrictHostKeyChecking=no soutenance21.yml ubuntu@13.37.213.232:/home/ubuntu"
+          script {
+              try{
+                  sh "ssh ubuntu@13.37.213.232 kubectl create -f ."
+              }catch(error){
+                  sh "ssh ubuntu@13.37.213.232 kubectl create -f ."
+        }
+      }
+    }
+    }
+    }
+  }
+
+}
